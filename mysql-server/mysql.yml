@@ -1,0 +1,46 @@
+---
+# file: mysql.yml
+
+- hosts: 127.0.0.1
+  sudo: yes
+  vars:
+    - login_username: root
+    - login_password: ""
+  tasks:
+    - selinux: state=disabled
+
+    - name: Check mysql-community.repo
+      shell: test -f /etc/yum.repos.d/mysql-community.repo
+      register: exists_mysql_repo
+      ignore_errors: True
+      changed_when: False
+
+    - name: Install MySQL yum repository
+      yum: >
+        name=http://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm
+        state=present
+      when: exists_mysql_repo | failed
+
+    - name: Install MySQL
+      yum: name=mysql-community-server state=present
+
+    - name: Copy simple my.cnf
+      template: src=my.cnf.j2 dest=/etc/my.cnf owner=root group=root mode=644
+      notify: Restart mysqld
+
+    - name: Create MySQL directories
+      file: path={{ item }} owner=mysql group=mysql state=directory
+      with_items:
+        - /var/log/mysql
+
+    - name: Start MySQL server
+      service: name=mysqld state=started enabled=yes
+
+    - yum: name=MySQL-python
+
+    - include: mysql_setup.yml
+
+  handlers:
+    - name: Restart mysqld
+      service: name=mysqld state=restarted
+

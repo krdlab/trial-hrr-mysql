@@ -1,0 +1,31 @@
+---
+# file: mysql_setup.yml
+
+- name: Create test DB
+  mysql_db: >
+    name=test
+    encoding=utf8mb4
+    state=present
+    login_user={{ login_username }}
+    login_password={{ login_password }}
+
+- copy: src=init.sql dest=/tmp
+
+- name: Import example data
+  mysql_db: >
+    name=test
+    state=import
+    target=/tmp/init.sql
+    login_user={{ login_username }}
+    login_password={{ login_password }}
+
+- name: Create test user
+  mysql_user: >
+    name=hrr-tester
+    host="%"
+    password=""
+    priv=test.*:INSERT,SELECT,UPDATE,DELETE
+    state=present
+    login_user={{ login_username }}
+    login_password={{ login_password }}
+
