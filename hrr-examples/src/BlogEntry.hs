@@ -1,10 +1,10 @@
 {-# LANGUAGE TemplateHaskell        #-}
 {-# LANGUAGE FlexibleInstances      #-}
 {-# LANGUAGE MultiParamTypeClasses  #-}
-module User where
+module BlogEntry where
 
 import Prelude hiding (id)
 import DataSource (defineTable)
 import Database.Record.TH (derivingShow)
 
-$(defineTable [] "test" "user" [derivingShow])
+$(defineTable [] "test" "blog_entry" [derivingShow])

@@ -75,15 +75,16 @@ INSERT INTO user
 INSERT INTO blog
     (id, title, user_id)
   VALUES
-      (101, 'user1 のブログ', 1)
-    , (102, 'user2 のブログ', 2)
+      (101, 'user1\'s blog', 1)
+    , (102, 'user2\'s blog', 2)
+    , (103, 'user3\'s blog', 3)
 ;
 INSERT INTO blog_entry
     (id, title, content, created_at, blog_id)
   VALUES
-      (10101, 'user1\'s entry1', 'コンテンツ 10101', '2015-05-01 09:00:00', 101)
-    , (10102, 'user1\'s entry2', 'コンテンツ 10102', '2015-05-02 09:00:00', 101)
-    , (10201, 'user2\'s entry1', 'コンテンツ 10201', '2015-05-02 13:00:00', 102)
+      (10101, 'user1\'s entry1', 'content 10101', '2015-05-01 09:00:00', 101)
+    , (10102, 'user1\'s entry2', 'content 10102', '2015-05-02 09:00:00', 101)
+    , (10201, 'user2\'s entry1', 'content 10201', '2015-05-02 13:00:00', 102)
 ;
 INSERT INTO tag
     (id, value)
