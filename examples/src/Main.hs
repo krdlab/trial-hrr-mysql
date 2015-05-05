@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
 import Database.HDBC (runRaw, quickQuery', fromSql)
@@ -30,12 +32,13 @@ import qualified Comment
 
 main :: IO ()
 main = handleSqlError' $ withConnectionIO connect $ \conn -> do
-    printQueryAndResult  conn users
-    printQueryAndResult  conn userAndBlog
-    printQueryAndResult  conn entryCount
-    printQueryAndResult' conn entriesOf 1
-    printQueryAndResult  conn blogAndTags
-    printQueryAndResult' conn commentsOf 10101
+    printQueryAndResult  conn "users" users
+    printQueryAndResult  conn "user and blog" userAndBlog
+    printQueryAndResult  conn "blog entry count" entryCount
+    printQueryAndResult' conn "blog entries of user1" entriesOf 1
+    printQueryAndResult  conn "blog entry and tags" entryAndTags
+    printQueryAndResult  conn "blog and tags" blogAndTags
+    printQueryAndResult' conn "comments of blog entry 10101" commentsOf 10101
   where
     users :: Relation () User
     users = relation $ query user
@@ -76,7 +79,6 @@ main = handleSqlError' $ withConnectionIO connect $ \conn -> do
         e <- query blogEntry
         t <- query entryAndTags
         on $ e ! BlogEntry.id' .=. t ! fst'
-        asc $ e ! BlogEntry.blogId'
         return $ e ! BlogEntry.blogId' >< t ! snd'
 
     commentsOf :: Relation Int32 Comment
@@ -86,12 +88,11 @@ main = handleSqlError' $ withConnectionIO connect $ \conn -> do
         asc $ c ! Comment.createdAt'
         return c
 
-    printQueryAndResult  c q    = printQueryAndResult' c q ()
-    printQueryAndResult' c q ph = do
+    printQueryAndResult  c t q    = printQueryAndResult' c t q ()
+    printQueryAndResult' c t q ph = do
         let rq = relationalQuery q
         res <- runQuery' c rq ph
-        putStrLn "Query:"
-        putStrLn $ "  " ++ show rq
-        putStrLn "Result:"
-        putStrLn $ "  " ++ show res
+        putStrLn $ "[" ++ t ++ "]"
+        putStrLn $ "  Query : " ++ show rq
+        putStrLn $ "  Result: " ++ show res
 

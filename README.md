@@ -1,4 +1,4 @@
-# Trial Project for Haskell Relational Record (HRR) using MySQL
+# Trial Project for Haskell Relational Record (HRR) and MySQL
 
 ## はじめに
 
@@ -16,7 +16,7 @@ HRR と MySQL の組み合わせで色々と実験するためのプロジェク
     * CentOS 6.6
     * MySQL >=5.6.24
 
-## 実行
+## VM 起動 -> ビルド -> examples 実行
 
 ```sh
 ## VM の起動
@@ -46,8 +46,7 @@ $ .cabal-sandbox/bin/hrr-examples
 
 ## MySQL 固有の事項
 
-ベーシックな使い方に限れば，スキーマ/テーブル名の normalize を抑制すれば良いだけになっている．
-(`IGNORE_SPACE` が不要になっていた)
+確認した範囲に限れば，スキーマ/テーブル名の normalize を抑制すれば良いだけになってた．
 
 ```haskell
 import Database.Relational.Query (Config (..), defaultConfig)
